@@ -8,8 +8,6 @@ const params = {
 };
 
 module.exports.list = (event, context, callback) => {
-  console.log(event.requestContext.identity.cognitoIdentityId);
-
   // fetch all todos from the database
   dynamoDb.scan(params, (error, result) => {
     // handle potential errors

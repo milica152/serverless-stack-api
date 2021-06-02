@@ -5,8 +5,6 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.update = (event, context, callback) => {
-  console.log(event.requestContext.identity.cognitoIdentityId);
-
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
 
