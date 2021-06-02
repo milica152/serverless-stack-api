@@ -4,11 +4,15 @@
   "description": "Serverless CRUD service exposing a REST HTTP interface",
   "author": "",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "stripe": "^8.150.0",
     "uuid": "^2.0.3"
   },
   "devDependencies": {
+    "jest": "^27.0.3",
     "serverless-dotenv-plugin": "^3.9.0"
   }
 }
