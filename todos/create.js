@@ -1,25 +1,24 @@
 'use strict';
 
 const uuid = require('uuid');
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const AWS = require('aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.create = (event, context, callback) => {
+module.exports.create = async (event, context) => {
 
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
   if (typeof data.text !== 'string') {
     console.error('Validation Failed');
-    callback(null, {
+    return {
       statusCode: 400,
       headers: { 
         'Content-Type': 'text/plain',
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,  },
       body: 'Couldn\'t create the todo item.',
-    });
-    return;
+    };
   }
 
   const params = {
@@ -33,30 +32,25 @@ module.exports.create = (event, context, callback) => {
     },
   };
 
-  // write the todo to the database
-  dynamoDb.put(params, (error) => {
-    // handle potential errors
-    if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 
-          'Content-Type': 'text/plain',
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,  },
-        body: 'Couldn\'t create the todo item.',
-      });
-      return;
-    }
-
-    // create a response
-    const response = {
+  try{
+    await dynamoDb.put(params).promise();
+    return {
       statusCode: 200,
       body: JSON.stringify(params.Item),
       headers: { 
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true, },
     };
-    callback(null, response);
-  });
+  } catch (error){
+    console.error(error);
+    return {
+      statusCode: error.statusCode || 501,
+      headers: {
+        'Content-Type': 'text/plain',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
+      },
+      body: 'Couldn\'t create the todo item.',
+    };
+  }
 };

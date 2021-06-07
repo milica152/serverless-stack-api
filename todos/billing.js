@@ -1,23 +1,22 @@
 const stripePackage = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const billing = require('../libs/billing-lib')
 
-module.exports.billing = (event, context, callback) => {
+module.exports.billing = async (event, context) => {
     const { storage, source } = JSON.parse(event.body);
     const amount = billing.calculateCost(storage);
     const description = "Scratch charge";
 
-    stripePackage.charges.create({
+    await stripePackage.charges.create({
         source,
         amount,
         description,
         currency: "usd",
     });
-    const response = {
+    return {
         statusCode: 200,
         body: "Successfully charged!",
         headers: { 
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true, },
-      };
-      callback(null, response);
+            "Access-Control-Allow-Credentials": true }
+    };
 };
