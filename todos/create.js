@@ -13,7 +13,10 @@ module.exports.create = (event, context, callback) => {
     console.error('Validation Failed');
     callback(null, {
       statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
+      headers: { 
+        'Content-Type': 'text/plain',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,  },
       body: 'Couldn\'t create the todo item.',
     });
     return;
@@ -37,7 +40,10 @@ module.exports.create = (event, context, callback) => {
       console.error(error);
       callback(null, {
         statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { 
+          'Content-Type': 'text/plain',
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,  },
         body: 'Couldn\'t create the todo item.',
       });
       return;
@@ -47,6 +53,9 @@ module.exports.create = (event, context, callback) => {
     const response = {
       statusCode: 200,
       body: JSON.stringify(params.Item),
+      headers: { 
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true, },
     };
     callback(null, response);
   });

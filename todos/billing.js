@@ -15,6 +15,9 @@ module.exports.billing = (event, context, callback) => {
     const response = {
         statusCode: 200,
         body: "Successfully charged!",
+        headers: { 
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true, },
       };
       callback(null, response);
 };
