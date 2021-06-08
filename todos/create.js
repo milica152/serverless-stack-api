@@ -9,7 +9,7 @@ module.exports.create = async (event, context) => {
 
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
-  if (typeof data.text !== 'string') {
+  if (typeof data.text !== 'string' || typeof data.image !== 'string') {
     console.error('Validation Failed');
     return {
       statusCode: 400,
@@ -26,6 +26,7 @@ module.exports.create = async (event, context) => {
     Item: {
       id: uuid.v1(),
       text: data.text,
+      image: data.image,
       checked: false,
       createdAt: timestamp,
       updatedAt: timestamp,
