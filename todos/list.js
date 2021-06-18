@@ -2,13 +2,22 @@
 
 const AWS = require('aws-sdk');
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-const params = {
-  TableName: process.env.DYNAMODB_TABLE,
-};
 
 module.exports.list = async (event, context) => {
   try{
+    console.log(JSON.stringify(event));
+    const userId = event.queryStringParameters.userId;
+    console.log(userId);
+
+    const dynamoDb = new AWS.DynamoDB.DocumentClient();
+    const params = {
+      TableName: process.env.DYNAMODB_TABLE,
+      FilterExpression: 'userId = :userId',
+      ExpressionAttributeValues: { 
+        ':userId': userId,
+      }
+    };
+
     const result = await dynamoDb.scan(params).promise();
     return {
       statusCode: 200,

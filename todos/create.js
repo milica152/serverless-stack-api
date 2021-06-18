@@ -6,8 +6,8 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.create = async (event, context) => {
-
   const timestamp = new Date().getTime();
+
   const data = JSON.parse(event.body);
   if (typeof data.text !== 'string' || typeof data.image !== 'string') {
     console.error('Validation Failed');
@@ -27,6 +27,7 @@ module.exports.create = async (event, context) => {
       id: uuid.v1(),
       text: data.text,
       image: data.image,
+      userId: data.userId,
       checked: false,
       createdAt: timestamp,
       updatedAt: timestamp,
