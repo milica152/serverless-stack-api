@@ -5,9 +5,7 @@ const AWS = require('aws-sdk');
 
 module.exports.list = async (event, context) => {
   try{
-    console.log(JSON.stringify(event));
     const userId = event.queryStringParameters.userId;
-    console.log(userId);
 
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     const params = {
