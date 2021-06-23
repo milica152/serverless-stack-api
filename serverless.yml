@@ -8,7 +8,7 @@ provider:
   runtime: nodejs10.x
   region: eu-west-1
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}-two-keys
     STRIPE_SECRET_KEY: ${env:STRIPE_SECRET_KEY}
   iamRoleStatements:
     - Effect: Allow
@@ -92,10 +92,16 @@ resources:
             -
               AttributeName: id
               AttributeType: S
+            -
+              AttributeName: userId
+              AttributeType: S
           KeySchema:
             -
-              AttributeName: id
+              AttributeName: userId
               KeyType: HASH
+            -
+              AttributeName: id
+              KeyType: RANGE
           ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1

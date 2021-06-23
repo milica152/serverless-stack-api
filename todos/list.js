@@ -10,7 +10,7 @@ module.exports.list = async (event, context) => {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     const params = {
       TableName: process.env.DYNAMODB_TABLE,
-      FilterExpression: 'userId = :userId',
+      KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: { 
         ':userId': userId,
       }
