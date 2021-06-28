@@ -14,7 +14,6 @@ module.exports.delete = async (event, context) => {
   };
   try{
     await dynamoDb.delete(params).promise();
-
     return {
       statusCode: 200,
       body: JSON.stringify({}),
