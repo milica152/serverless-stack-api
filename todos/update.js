@@ -24,6 +24,7 @@ module.exports.update = async (event, context) => {
     TableName: process.env.DYNAMODB_TABLE,
     Key: {
       id: event.pathParameters.id,
+      userId: data.userId
     },
     ExpressionAttributeNames: {
       '#todo_text': 'text',
@@ -31,7 +32,7 @@ module.exports.update = async (event, context) => {
     ExpressionAttributeValues: {
       ':text': data.text,
       ':checked': data.checked,
-      ':updatedAt': timestamp,
+      ':updatedAt': timestamp
     },
     UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW',

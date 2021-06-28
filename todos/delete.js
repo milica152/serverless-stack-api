@@ -9,6 +9,7 @@ module.exports.delete = async (event, context) => {
     TableName: process.env.DYNAMODB_TABLE,
     Key: {
       id: event.pathParameters.id,
+      userId: event.pathParameters.userId
     },
   };
   try{

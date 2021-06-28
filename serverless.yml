@@ -1,6 +1,7 @@
 service: serverless-rest-api-with-dynamodb
 plugins:
   - serverless-dotenv-plugin
+  - serverless-offline
 frameworkVersion: ">=1.1.0 <2.50.0"
 
 provider:
@@ -66,7 +67,7 @@ functions:
     handler: todos/delete.delete
     events:
       - http:
-          path: todos/{id}
+          path: todos/{id}/{userId}
           method: delete
           cors: true
           authorizer:
