@@ -16,7 +16,7 @@ module.exports.list = async (event, context) => {
       }
     };
 
-    const result = await dynamoDb.scan(params).promise();
+    const result = await dynamoDb.query(params).promise();
     return {
       statusCode: 200,
       body: JSON.stringify(result.Items),
