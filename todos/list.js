@@ -6,7 +6,6 @@ const AWS = require('aws-sdk');
 module.exports.list = async (event, context) => {
   try{
     const userId = event.queryStringParameters.userId;
-
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
     const params = {
       TableName: process.env.DYNAMODB_TABLE,
