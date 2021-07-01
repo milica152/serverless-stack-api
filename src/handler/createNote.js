@@ -5,7 +5,7 @@ const AWS = require('aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.create = async (event, context) => {
+module.exports.createNote = async (event, context) => {
   const timestamp = new Date().getTime();
 
   const data = JSON.parse(event.body);

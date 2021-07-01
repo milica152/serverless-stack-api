@@ -1,5 +1,5 @@
 const stripePackage = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const billing = require('../libs/billing-lib')
+const billing = require('./billing-lib')
 
 module.exports.billing = async (event, context) => {
     const { storage, source } = JSON.parse(event.body);

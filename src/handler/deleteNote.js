@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.delete = async (event, context) => {
+module.exports.deleteNote = async (event, context) => {
   const params = {
     TableName: process.env.DYNAMODB_TABLE,
     Key: {
