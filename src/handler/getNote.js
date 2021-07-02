@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.getNote = async (event, context) => {
+module.exports.handler = async (event, context) => {
   const params = {
     TableName: process.env.DYNAMODB_TABLE,
     KeyConditionExpression: 'id = :id and userId = :userId',

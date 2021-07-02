@@ -24,7 +24,7 @@ provider:
 
 functions:
   create:
-    handler: src/handler/createNote.createNote
+    handler: src/handler/createNote.handler
     events:
       - http:
           path: todos
@@ -34,7 +34,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   list:
-    handler: src/handler/listUserNotes.listUserNotes
+    handler: src/handler/listUserNotes.handler
     events:
       - http:
           path: todos
@@ -44,7 +44,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   get:
-    handler: src/handler/getNote.getNote
+    handler: src/handler/getNote.handler
     events:
       - http:
           path: todos/{id}
@@ -54,7 +54,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   update:
-    handler: src/handler/updateNote.updateNote
+    handler: src/handler/updateNote.handler
     events:
       - http:
           path: todos/{id}
@@ -64,7 +64,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   delete:
-    handler: src/handler/deleteNote.deleteNote
+    handler: src/handler/deleteNote.handler
     events:
       - http:
           path: todos/{id}/{userId}
@@ -73,7 +73,7 @@ functions:
           authorizer:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
   billing:
-      handler: src/helper/billing.billing
+      handler: src/helper/billing.handler
       events:
         - http:
             path: billing
