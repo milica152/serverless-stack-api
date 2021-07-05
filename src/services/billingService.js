@@ -1,7 +1,8 @@
 const stripePackage = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const billing = require('../helper/billing')
 
-const billing = (event) => {
+// 3rd party API service
+module.exports.billing = async (event) => {
     const { storage, source } = JSON.parse(event.body);
     const amount = billing.calculateCost(storage);
     const description = "Scratch charge";
@@ -20,5 +21,3 @@ const billing = (event) => {
             "Access-Control-Allow-Credentials": true }
     };
 }
-
-export { billing };

@@ -2,7 +2,10 @@ const uuid = require('uuid');
 const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-const create = (data) => {
+// notes table service
+
+module.exports.create = async (event) => {
+    const data = JSON.parse(event.body);
     const timestamp = new Date().getTime();
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
@@ -10,7 +13,7 @@ const create = (data) => {
             id: uuid.v1(),
             text: data.text,
             image: data.image,
-            userId: data.userId,
+            userId: event.requestContext.authorizer.claims.sub,
             checked: false,
             createdAt: timestamp,
             updatedAt: timestamp,
@@ -41,12 +44,13 @@ const create = (data) => {
         };
     }
 }
-const deleteNote = (event) => {
+
+module.exports.deleteNote = async (event) => {
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
         Key: {
             id: event.pathParameters.id,
-            userId: event.pathParameters.userId
+            userId: event.requestContext.authorizer.claims.sub
         },
     };
     try {
@@ -73,13 +77,13 @@ const deleteNote = (event) => {
     }
 }
 
-const get = (event) => {
+module.exports.get = async (event) => {
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
         KeyConditionExpression: 'id = :id and userId = :userId',
         ExpressionAttributeValues: {
             ':id': event.pathParameters.id,
-            ':userId': event.queryStringParameters.userId
+            ':userId': event.requestContext.authorizer.claims.sub
         }
     };
     try {
@@ -107,9 +111,9 @@ const get = (event) => {
 
 }
 
-const list = (event) => {
+module.exports.list = async (event) => {
     try {
-        const userId = event.queryStringParameters.userId;
+        const userId = event.requestContext.authorizer.claims.sub;
         const params = {
             TableName: process.env.DYNAMODB_TABLE,
             KeyConditionExpression: 'userId = :userId',
@@ -140,7 +144,7 @@ const list = (event) => {
     }
 }
 
-const update = (event) => {
+module.exports.update = async (event) => {
     const data = JSON.parse(event.body);
     const timestamp = new Date().getTime();
 
@@ -161,7 +165,7 @@ const update = (event) => {
         TableName: process.env.DYNAMODB_TABLE,
         Key: {
             id: event.pathParameters.id,
-            userId: data.userId
+            userId: event.requestContext.authorizer.claims.sub
         },
         ExpressionAttributeNames: {
             '#todo_text': 'text',
@@ -198,5 +202,3 @@ const update = (event) => {
     }
 
 }
-
-export { create, deleteNote, get, list, update };
