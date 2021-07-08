@@ -24,7 +24,7 @@ provider:
 
 functions:
   create:
-    handler: todos/create.create
+    handler: src/handler/createNote.handler
     events:
       - http:
           path: todos
@@ -34,7 +34,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   list:
-    handler: todos/list.list
+    handler: src/handler/listUserNotes.handler
     events:
       - http:
           path: todos
@@ -44,7 +44,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   get:
-    handler: todos/get.get
+    handler: src/handler/getNote.handler
     events:
       - http:
           path: todos/{id}
@@ -54,7 +54,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   update:
-    handler: todos/update.update
+    handler: src/handler/updateNote.handler
     events:
       - http:
           path: todos/{id}
@@ -64,16 +64,16 @@ functions:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
 
   delete:
-    handler: todos/delete.delete
+    handler: src/handler/deleteNote.handler
     events:
       - http:
-          path: todos/{id}/{userId}
+          path: todos/{id}
           method: delete
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:eu-west-1:941845565656:userpool/eu-west-1_nwGY0Rl7X
   billing:
-      handler: todos/billing.billing
+      handler: src/handler/billing.handler
       events:
         - http:
             path: billing
@@ -84,26 +84,4 @@ functions:
 
 resources:
   - ${file(resources/api-gateway-errors.yml)}
-  - Resources:
-      TodosDynamoDbTable:
-        Type: 'AWS::DynamoDB::Table'
-        DeletionPolicy: Retain
-        Properties:
-          AttributeDefinitions:
-            -
-              AttributeName: id
-              AttributeType: S
-            -
-              AttributeName: userId
-              AttributeType: S
-          KeySchema:
-            -
-              AttributeName: userId
-              KeyType: HASH
-            -
-              AttributeName: id
-              KeyType: RANGE
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
-          TableName: ${self:provider.environment.DYNAMODB_TABLE}
+  - ${file(resources/dynamodb-resource.yml)}
