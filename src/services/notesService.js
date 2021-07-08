@@ -1,5 +1,6 @@
 const uuid = require('uuid');
 const AWS = require('aws-sdk');
+const { response } = require('../helper/response');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 // notes table service
@@ -22,26 +23,10 @@ module.exports.create = async (event) => {
 
     try {
         await dynamoDb.put(params).promise();
-        return {
-            statusCode: 200,
-            body: JSON.stringify(params.Item),
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-        };
+        return response(200, params.Item);
     } catch (error) {
         console.error(error);
-        return {
-            // create separate object for response
-            statusCode: error.statusCode || 501,
-            headers: {
-                'Content-Type': 'text/plain',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true
-            },
-            body: 'Couldn\'t create the todo item.',
-        };
+        return response(error.statusCode, 'Couldn\'t create the todo item.');
     }
 }
 
@@ -54,26 +39,11 @@ module.exports.deleteNote = async (event) => {
         },
     };
     try {
-        await dynamoDb.delete(params).promise();
-        return {
-            statusCode: 200,
-            body: JSON.stringify({}),
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-        };
+        const note = await dynamoDb.delete(params).promise();
+        return response(200, note);
     } catch (error) {
         console.error(error);
-        return {
-            statusCode: error.statusCode || 501,
-            headers: {
-                'Content-Type': 'text/plain',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-            body: 'Couldn\'t remove the todo item.',
-        };
+        return response(error.statusCode || 501, 'Couldn\'t remove the todo item.');
     }
 }
 
@@ -88,25 +58,10 @@ module.exports.get = async (event) => {
     };
     try {
         const result = await dynamoDb.query(params).promise();
-        return {
-            statusCode: 200,
-            body: JSON.stringify(result.Items),
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-        };
+        return response(200, result.Items);
     } catch (error) {
         console.error(error);
-        return {
-            statusCode: error.statusCode || 501,
-            headers: {
-                'Content-Type': 'text/plain',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-            body: 'Couldn\'t fetch the todo item.',
-        };
+        return response(error.statusCode || 501, 'Couldn\'t fetch the todo item.');
     }
 
 }
@@ -123,24 +78,9 @@ module.exports.list = async (event) => {
         };
 
         const result = await dynamoDb.query(params).promise();
-        return {
-            statusCode: 200,
-            body: JSON.stringify(result.Items),
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-        };
+        return response(200, result.Items);
     } catch (error) {
-        return {
-            statusCode: error.statusCode || 501,
-            headers: {
-                'Content-Type': 'text/plain',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-            body: 'Couldn\'t fetch the todos.',
-        }
+        return response(error.statusCode, 'Couldn\'t fetch the todos.');
     }
 }
 
@@ -150,15 +90,7 @@ module.exports.update = async (event) => {
 
     if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
         console.error('Validation Failed');
-        return {
-            statusCode: 400,
-            headers: {
-                'Content-Type': 'text/plain',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-            body: 'Couldn\'t update the todo item.',
-        };
+        return response(400, 'Couldn\'t update the todo item.');
     }
 
     const params = {
@@ -181,24 +113,9 @@ module.exports.update = async (event) => {
 
     try {
         const result = await dynamoDb.update(params).promise();
-        return {
-            statusCode: 200,
-            body: JSON.stringify(result.Attributes),
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-        };
+        return response(200, result.Attributes);
     } catch (error) {
-        return {
-            statusCode: error.statusCode || 501,
-            headers: {
-                'Content-Type': 'text/plain',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true,
-            },
-            body: 'Couldn\'t fetch the todo item.',
-        };
+        return response(error.statusCode, 'Couldn\'t fetch the todo item.');
     }
 
 }
