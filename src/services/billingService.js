@@ -1,5 +1,6 @@
 const stripePackage = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const billing = require('../helper/billing')
+const billing = require('../helper/billing');
+const { response } = require('../helper/response');
 
 // 3rd party API service
 module.exports.billing = async (event) => {
@@ -13,11 +14,5 @@ module.exports.billing = async (event) => {
         description,
         currency: "usd",
     });
-    return {
-        statusCode: 200,
-        body: "Successfully charged!",
-        headers: { 
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true }
-    };
+    return response(200, 'Successfully charged!');
 }
