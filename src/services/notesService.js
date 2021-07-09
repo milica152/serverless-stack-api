@@ -26,7 +26,7 @@ module.exports.create = async (event) => {
         return response(200, params.Item);
     } catch (error) {
         console.error(error);
-        return response(error.statusCode, 'Couldn\'t create the todo item.');
+        return response(error.statusCode, error.message);
     }
 }
 
@@ -37,13 +37,13 @@ module.exports.deleteNote = async (event) => {
             id: event.pathParameters.id,
             userId: event.requestContext.authorizer.claims.sub
         },
-    };
+    }; 
     try {
         const note = await dynamoDb.delete(params).promise();
         return response(200, note);
     } catch (error) {
         console.error(error);
-        return response(error.statusCode || 501, 'Couldn\'t remove the todo item.');
+        return response(500, error.message);
     }
 }
 
@@ -61,7 +61,7 @@ module.exports.get = async (event) => {
         return response(200, result.Items);
     } catch (error) {
         console.error(error);
-        return response(error.statusCode || 501, 'Couldn\'t fetch the todo item.');
+        return response(500, error.message);
     }
 
 }
@@ -80,7 +80,7 @@ module.exports.list = async (event) => {
         const result = await dynamoDb.query(params).promise();
         return response(200, result.Items);
     } catch (error) {
-        return response(error.statusCode, 'Couldn\'t fetch the todos.');
+        return response(error.statusCode, error.message);
     }
 }
 
@@ -90,7 +90,7 @@ module.exports.update = async (event) => {
 
     if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
         console.error('Validation Failed');
-        return response(400, 'Couldn\'t update the todo item.');
+        return response(400, 'Description or image are not the correct type!');
     }
 
     const params = {
@@ -115,7 +115,7 @@ module.exports.update = async (event) => {
         const result = await dynamoDb.update(params).promise();
         return response(200, result.Attributes);
     } catch (error) {
-        return response(error.statusCode, 'Couldn\'t fetch the todo item.');
+        return response(error.statusCode, error.message);
     }
 
 }
